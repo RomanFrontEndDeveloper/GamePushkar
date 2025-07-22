@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Лотерея Пушкаря</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="container text-center mt-3">
+      <h2 id="game-message">
+        Граємо гру! У вас є 3 спроби, щоб знайти Пушкаря.
+      </h2>
+      <div id="result-message" class="text-danger"></div>
+      <button id="retry-button" class="btn btn-primary">Грати ще</button>
+    </div>
+
+    <div class="squares-container"></div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
