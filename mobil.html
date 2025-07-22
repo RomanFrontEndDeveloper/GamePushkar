@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Лотерея Пушкаря</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(90deg, #8b02fb, #001eff, #04f237);
+        overflow: hidden;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .container {
+        padding: 10px;
+      }
+
+      .squares-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 10px;
+        max-width: 320px;
+        margin: 0 auto;
+      }
+
+      .square {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        font-size: 0.7rem;
+        border: 1px solid black;
+        background-color: aqua;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+        box-shadow: 1px 5px 20px rgba(38, 80, 232, 0.5);
+        text-align: center;
+        padding: 4px;
+        word-wrap: break-word;
+      }
+
+      .square-wrong {
+        background-color: red;
+      }
+
+      .square-correct {
+        background-color: rgb(182, 248, 117);
+      }
+
+      #retry-button {
+        display: none;
+        margin-top: 20px;
+      }
+
+      #result-message {
+        display: none;
+        margin-top: 20px;
+        font-size: 1.3rem;
+        font-weight: bold;
+      }
+
+      #game-message {
+        font-size: 1.4rem;
+        margin-top: 10px;
+      }
+
+      @media (max-width: 480px) {
+        .square {
+          font-size: 12px;
+          padding: 3px;
+        }
+
+        #game-message {
+          font-size: 1rem;
+        }
+
+        #result-message {
+          font-size: 1.1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container text-center mt-3">
+      <h2 id="game-message">
+        Граємо гру! У вас є 3 спроби, щоб знайти Пушкаря.
+      </h2>
+      <div id="result-message" class="text-danger"></div>
+      <button id="retry-button" class="btn btn-primary">Грати ще</button>
+    </div>
+
+    <div class="squares-container"></div>
+
+    <script>
+      const totalCards = 9
+      const winningIndex = Math.floor(Math.random() * totalCards) + 1
+      const retryButton = document.getElementById('retry-button')
+      const resultMessage = document.getElementById('result-message')
+
+      const buttonTexts = [
+        'На офісі',
+        'В ломбарді',
+        'В мами обідає',
+        'В нотаріуса',
+        'Жере хот-дога',
+        'На показі кв',
+        'Пє пиво дома',
+        'Миє Rogue',
+        'В епіцентрі',
+      ]
+
+      const cards = []
+      for (let i = 1; i <= totalCards; i++) {
+        const isWinning = i === winningIndex
+        const label = buttonTexts[i - 1]
+        cards.push(new LotteryCard(i, isWinning, label))
+      }
+
+      function LotteryCard(index, isWinning, label) {
+        this.index = index
+        this.isWinning = isWinning
+        this.label = label
+        this.handleTry = function (attempt, square) {
+          if (this.isWinning) {
+            square.classList.add('square-correct')
+            resultMessage.style.display = 'block'
+            resultMessage.classList.remove('text-danger')
+            resultMessage.classList.add('text-success')
+            resultMessage.textContent =
+              'Ви виграли 100$. Пушкар зв’яжеться з вами протягом доби!'
+            retryButton.style.display = 'inline-block'
+            disableAllSquares()
+          } else {
+            square.classList.add('square-wrong')
+            if (attempt === 3) {
+              resultMessage.style.display = 'block'
+              resultMessage.classList.remove('text-success')
+              resultMessage.classList.add('text-danger')
+              resultMessage.textContent = 'Ви програли і винні Пушкарю 100 грн!'
+              retryButton.style.display = 'inline-block'
+              disableAllSquares()
+              highlightWinningSquare()
+            } else {
+              alert('Неправильна відповідь! Спробуйте ще!')
+            }
+          }
+        }
+      }
+
+      function renderSquares(squares) {
+        let attempt = 0
+        const squareContainer = document.querySelector('.squares-container')
+        squares.forEach((item) => {
+          const square = document.createElement('div')
+          const squareText = document.createElement('h6')
+          squareText.innerHTML = item.label
+          square.appendChild(squareText)
+          square.classList.add('square')
+          square.addEventListener('click', function handleClick() {
+            item.handleTry(++attempt, square)
+            square.removeEventListener('click', handleClick)
+          })
+          squareContainer.appendChild(square)
+        })
+      }
+
+      function disableAllSquares() {
+        const allSquares = document.querySelectorAll('.square')
+        allSquares.forEach((sq) => {
+          sq.style.pointerEvents = 'none'
+        })
+      }
+
+      function highlightWinningSquare() {
+        const allSquares = document.querySelectorAll('.square')
+        allSquares.forEach((sq) => {
+          if (sq.textContent === buttonTexts[winningIndex - 1]) {
+            sq.classList.add('square-correct')
+          }
+        })
+      }
+
+      retryButton.addEventListener('click', () => {
+        location.reload()
+      })
+
+      renderSquares(cards)
+    </script>
+  </body>
+</html>
