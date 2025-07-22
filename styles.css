@@ -41,11 +41,11 @@ body {
 }
 
 .square-wrong {
-  background-color: red;
+  background-color: rgb(247, 71, 71);
 }
 
 .square-correct {
-  background-color: rgb(182, 248, 117);
+  background-color: rgb(69, 99, 249);
 }
 
 #retry-button {
@@ -58,11 +58,13 @@ body {
   margin-top: 20px;
   font-size: 1.3rem;
   font-weight: bold;
+  font-size: 45px;
 }
 
 #game-message {
-  font-size: 1.4rem;
+  font-size: 3rem;
   margin-top: 10px;
+  color: #32f420;
 }
 
 @media (max-width: 480px) {
@@ -76,6 +78,11 @@ body {
   }
 
   #result-message {
-    font-size: 1.1rem;
+    font-size: 2rem;
+    color: white;
   }
+}
+.text-success {
+  color: #f7f600 !important;
+  font-size: 50px;
 }
